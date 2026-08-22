@@ -4,6 +4,13 @@ across news and social media.
 Public surface is deliberately tiny for now; it grows one step at a time.
 """
 
+from engine_lookup.dedup import (
+    DuplicateCluster,
+    canonicalize_url,
+    cluster_near_duplicates,
+    hamming_distance,
+    simhash,
+)
 from engine_lookup.entity import (
     Affiliation,
     EntityProfile,
@@ -12,10 +19,17 @@ from engine_lookup.entity import (
 )
 
 __all__ = [
+    # entity
     "Affiliation",
     "EntityProfile",
     "EntityType",
     "Handle",
+    # dedup
+    "DuplicateCluster",
+    "canonicalize_url",
+    "cluster_near_duplicates",
+    "hamming_distance",
+    "simhash",
 ]
 
 __version__ = "0.0.1"

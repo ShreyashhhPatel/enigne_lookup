@@ -31,7 +31,8 @@ technical) it must respect.
 Early, built one reviewable step at a time. See
 [`docs/HANDOVER.md`](docs/HANDOVER.md) for exactly where things stand.
 
-**Step 1 (done):** repo foundation + the `EntityProfile` model and its tests.
+- **Step 1 (done):** repo foundation + the `EntityProfile` model and its tests.
+- **Step 2 (done):** URL canonicalization + SimHash near-duplicate clustering.
 
 ## Develop
 

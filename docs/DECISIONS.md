@@ -69,6 +69,33 @@ local Python 3.14 before committing to it.
 (full-archive is Enterprise-only) and the least differentiating. Bluesky's
 firehose is the best open real-time source available right now.
 
+### 2026-08-22 — SimHash dedup: unigram features, Hamming threshold 6
+
+**Decision:** Near-duplicate detection uses a 64-bit Charikar SimHash over
+**unigram** tokens (`shingle_size=1`), clustered with a Hamming-distance
+threshold of **6**.
+**Why:** Measured against a realistic ~110-word wire story and outlet variants:
+unigram fingerprints move only ~2 bits when an outlet wraps the wire copy in its
+own intro/outro, ~5 bits for a phrase swap, and ~30 bits for an unrelated story.
+Word n-gram shingles (size 2-3) flip 6-13 bits on the same intro/outro because
+the shingles at the seams change — worse for exactly the syndication case we
+care about. Threshold 6 sits well above genuine re-runs (≤5) and far below
+unrelated (30+), so it catches "same text, different wrapper" without collapsing
+*independent coverage of the same event* (which shares vocabulary but is not the
+same story). Calibrated empirically before fixing the number, not guessed.
+**Rejected:** trigram shingles as the default (too brittle to boilerplate);
+threshold 3 (misses lightly-edited re-runs at unigram scale).
+
+### 2026-08-22 — canonicalize_url produces a dedup KEY, not a fetch URL
+
+**Decision:** `canonicalize_url` normalizes http→https, strips `www.`, drops
+default web ports (80 **and** 443), removes tracking params (`utm_*` + a
+click-id list) and the fragment, and sorts remaining params.
+**Why:** The output's job is to be a stable comparison key so trivially
+different links to the same page collapse. That means being willing to change
+the scheme/host cosmetically — acceptable because we never claim the result is
+guaranteed-fetchable, only that equal content yields an equal key.
+
 ### 2026-08-22 — Postgres over Kafka for v1 ingestion
 
 **Decision:** Use Postgres + a job table for ingestion queueing in v1; introduce
