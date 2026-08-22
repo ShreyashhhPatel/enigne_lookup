@@ -33,6 +33,7 @@ Early, built one reviewable step at a time. See
 
 - **Step 1 (done):** repo foundation + the `EntityProfile` model and its tests.
 - **Step 2 (done):** URL canonicalization + SimHash near-duplicate clustering.
+- **Step 3 (done):** `Document` model + GDELT source adapter (injectable fetcher).
 
 ## Develop
 

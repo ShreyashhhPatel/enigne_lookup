@@ -52,9 +52,11 @@ Every stage depends on it:
 | Component            | Layer     | Uses an LLM? | Status        |
 |----------------------|-----------|--------------|---------------|
 | `entity.py`          | shared    | no           | **built**     |
+| `Document` model     | shared    | no           | **built**     |
 | URL canonicalization | breadth   | no           | **built**     |
 | Near-dup clustering  | breadth   | no           | **built**     |
-| Source pollers       | breadth   | no           | planned       |
+| Source pollers       | breadth   | no           | GDELT built; others planned |
+| Article body extract | breadth   | no           | planned       |
 | Candidate matching   | breadth   | no           | planned       |
 | Entity linking       | breadth¹  | tiered²      | planned       |
 | Investigation graph  | depth     | yes          | planned       |

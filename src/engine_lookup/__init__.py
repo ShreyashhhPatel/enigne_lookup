@@ -11,6 +11,7 @@ from engine_lookup.dedup import (
     hamming_distance,
     simhash,
 )
+from engine_lookup.document import Document
 from engine_lookup.entity import (
     Affiliation,
     EntityProfile,
@@ -24,6 +25,8 @@ __all__ = [
     "EntityProfile",
     "EntityType",
     "Handle",
+    # document
+    "Document",
     # dedup
     "DuplicateCluster",
     "canonicalize_url",

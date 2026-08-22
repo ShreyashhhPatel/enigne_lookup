@@ -69,6 +69,40 @@ local Python 3.14 before committing to it.
 (full-archive is Enterprise-only) and the least differentiating. Bluesky's
 firehose is the best open real-time source available right now.
 
+### 2026-08-22 — Document is a *mention*, not an entity; carries a dedup key
+
+**Decision:** `Document` models one fetched item (article/post), separate from
+`EntityProfile`. It stores both the raw `url` and a computed `canonical_url`,
+and exposes `dedup_text` (body, or title when the body is absent).
+**Why:** A fetched item is not yet known to be about our target — linking
+decides that later. Keeping raw + canonical URL side by side means we can fetch
+the real link but dedup on the stable key. `dedup_text` centralizes the
+"body-if-present-else-title" fallback so callers don't re-implement it.
+
+### 2026-08-22 — Injectable `Fetcher`, stdlib urllib default (no HTTP dep)
+
+**Decision:** Sources depend on a tiny `Fetcher` protocol; the default
+implementation uses stdlib `urllib`. HTTP errors return their status as data
+(e.g. 429) instead of raising.
+**Why:** Injecting the fetcher makes every source parser testable without a
+network (tests use a `FakeFetcher`). Stdlib urllib avoids adding requests/httpx
+for a handful of GETs (keeps deps minimal). Returning the status lets the source
+own the back-off decision — a 429 must reach the source logic, not blow up mid-parse.
+**Rejected:** requests/httpx as a hard dependency this early (add later if
+connection pooling / HTTP2 justify it).
+
+### 2026-08-22 — GDELT: artlist metadata now, article body later
+
+**Decision:** The GDELT adapter uses DOC 2.0 `artlist`, which returns metadata
+(url/title/seendate/domain), not body text. Body extraction (trafilatura) is a
+separate later step. `GdeltSource` self-throttles to one request / 5s and
+surfaces both HTTP-429 and GDELT's plaintext-200 rate-limit notice as
+`RateLimited`.
+**Why:** artlist is the free, keyless, high-coverage entry point; fetching
+bodies for every hit up front is wasteful before candidate matching narrows the
+set. The 5s limit and the plaintext-200 quirk were both observed live during
+Step 3 and baked into the client rather than left as future surprises.
+
 ### 2026-08-22 — SimHash dedup: unigram features, Hamming threshold 6
 
 **Decision:** Near-duplicate detection uses a 64-bit Charikar SimHash over
