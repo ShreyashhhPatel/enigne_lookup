@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "engine_lookup"
+version = "0.0.1"
+description = "An entity-centric agent for finding and tracking people across news and social media."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Shreyash Patel" }]
+
+# Kept intentionally minimal for Step 1. Source pollers, the entity-linking
+# stack (spaCy / GLiNER), and LangGraph get added in the steps that introduce
+# them — not speculatively up front.
+dependencies = [
+    "pydantic>=2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/engine_lookup"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
